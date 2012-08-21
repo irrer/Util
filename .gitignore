@@ -24,6 +24,7 @@ target/
 .springBeans
 .settings/
 hs_err_pid*.log
+bin/
 
 # xterm stuff
 xterm.exe.stackdump
