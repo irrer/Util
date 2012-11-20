@@ -91,11 +91,17 @@ public class Log {
         try {
             String loggingPropertiesFile = System.getProperty("java.util.logging.config.file");
             File file = new File(loggingPropertiesFile);
-            Properties loggingProperties = new Properties();
-            loggingProperties.load(new FileInputStream(file));
-            File logFile = new File(loggingProperties.getProperty("edu.umro.util.LogFileHandler.pattern"));
-            File parent = (logFile.getParentFile() == null) ? new File(".") : logFile.getParentFile();
-            parent.mkdirs();
+            if (file.canRead()) {
+                Properties loggingProperties = new Properties();
+                loggingProperties.load(new FileInputStream(file));
+                File logFile = new File(loggingProperties.getProperty("edu.umro.util.LogFileHandler.pattern"));
+                File parent = (logFile.getParentFile() == null) ? new File(".") : logFile.getParentFile();
+                System.out.println("Using log directory: " + parent.getAbsolutePath());
+                parent.mkdirs();
+            }
+            else {
+                System.out.println("Unable to read logging properties file: " + file.getAbsolutePath() + "  proceeding without logging.");
+            }
         }
         catch (Exception e) {
             ;
