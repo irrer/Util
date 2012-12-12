@@ -251,7 +251,6 @@ public class XML {
      * @return The value of the attribute, or null if not found.
      */
     public static String getAttributeValue(Node node, String attributeName) {
-        // TODO Jim was here Fri Apr 2 15:30:47 EDT 2010
         NamedNodeMap attributeList = node.getAttributes();
         if (attributeList != null) {
             Node attrNode = attributeList.getNamedItem(attributeName);
