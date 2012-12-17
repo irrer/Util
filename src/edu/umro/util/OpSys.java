@@ -151,6 +151,7 @@ public class OpSys {
                 InetAddress localMachine = InetAddress.getLocalHost();
                 NetworkInterface networkInterface = NetworkInterface.getByInetAddress(localMachine);
                 byte[] hwAddr = networkInterface.getHardwareAddress();
+                if (hwAddr == null) throw new SocketException("Insufficient privilges to get MAC address");
                 for (byte b : hwAddr) {
                     macAddress = (macAddress << 8) + ((int)b);
                 }

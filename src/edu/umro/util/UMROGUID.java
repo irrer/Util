@@ -20,6 +20,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.rmi.server.UID;
 
+import java.util.Random;
 import java.util.StringTokenizer;
 
 /**
@@ -51,12 +52,22 @@ public class UMROGUID {
      * @throws SocketException 
      * @throws UnknownHostException 
      */
-    public static synchronized String getUID() throws UnknownHostException, SocketException {
+    public static synchronized String getUID() throws UnknownHostException {
 
         // Initialized MAC address if necessary.
         if (!initialized) {
             initialized = true;
-            macAddress = OpSys.getMACAddress();
+            try {
+                macAddress = OpSys.getMACAddress();
+            }
+            catch (SocketException e) {
+                macAddress = Long.parseLong(OpSys.getHostIPAddress().replace('.', 'x').replaceAll("x", ""));
+                // if localhost (127.0.0.1) is returned, then try something random instead.  The risk is
+                // that the same 2^63 random number will be returned twice, but it is a low risk. 
+                if (macAddress == 127001) {
+                    macAddress = new Random().nextLong();
+                }
+            }
             macAddress = Math.abs(macAddress);
         }
 
@@ -72,7 +83,7 @@ public class UMROGUID {
 
         // concatenate values to make it into a DICOM GUID.
         String guid = UMRO_ROOT_GUID + macAddress + "." + unique + "." + time
-                + "." + count;
+        + "." + count;
 
         return guid;
     }
