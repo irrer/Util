@@ -159,7 +159,7 @@ public class XML {
         return nodeList.item(0);
     }
 
-    
+
     /**
      * Convert XML document text to a DOM.  Throw a
      * RemoteException if there is a problem.
@@ -188,7 +188,7 @@ public class XML {
         }
         return document;
     }
-    
+
 
 
     /**
@@ -238,8 +238,41 @@ public class XML {
         }
         return value;
     }
-    
-    
+
+
+    private static boolean isRegularChar(byte c){
+        return
+        ((c >= ' ') && (c <= 126)) ||
+        (c == '\r') ||
+        (c == '\n') ||
+        (c == '\t');
+    }
+
+
+    public static void replaceControlCharacters(Node node, char replacement) {
+        String value = node.getNodeValue();
+        if ((value != null) && value.matches(".*[^\r\n\t -~].*")) {
+
+            byte[] bytes = value.getBytes();
+            for(int b = 0; b < bytes.length; b++) {
+                if (!isRegularChar(bytes[b])) {
+                    bytes[b] = (byte)replacement;
+                }
+            }
+            node.setNodeValue(new String(bytes));
+        }
+        NamedNodeMap attrList = node.getAttributes();
+        for (int a = 0; (attrList != null) && (a < attrList.getLength()); a++) {
+            replaceControlCharacters(attrList.item(a), replacement);
+        }
+
+        NodeList childNodeList = node.getChildNodes();
+        for (int c = 0; (childNodeList != null) && (c < childNodeList.getLength()); c++) {
+            replaceControlCharacters(childNodeList.item(c), replacement);
+        }
+    }
+
+
     /**
      * Get the value of the given attribute for the given node.  If the node has
      * no such attribute, then return null.
@@ -265,6 +298,26 @@ public class XML {
 
     public static void main(String[] args) {
         try {
+            {
+                boolean allSuccess = true;
+                String stuff[] = {
+                        "good",
+                        "/ngood/t",
+                        "aa\0bad\0",
+                        "aa\127bad\0",
+                        "aa\144bad\0",
+                        "aa\126good",
+                        "bad\6"
+                };
+                for (String value : stuff) {
+                    boolean match = value.matches(".*[^\r\n\t -~].*");
+                    boolean bad = value.matches(".*bad.*");
+                    allSuccess = allSuccess && (match == bad);
+                    System.out.println("    " + value + "   match: " + match + "    " + (match == bad ? "success" : "fail"));
+                }
+                System.out.println("allSuccess: " + allSuccess);
+            }
+
             String xmlText =
                 "<UMROEnvelope JarInfo='1_0_0' Time='2009 12 01 10:34:11.955'>\n" +
                 "  <Call>\n"                                                      +
