@@ -30,7 +30,7 @@ import java.util.logging.Logger;
  * package.
  * <p>
  * In general, all logging is sent to files that are overwritten on a
- * rotating basis.  The size and 
+ * rotating basis.
  * 
  * @author Jim Irrer  irrer@umich.edu 
  *
