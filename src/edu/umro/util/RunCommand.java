@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 
 /**
  * Static class to run a command from the system.
@@ -37,22 +38,35 @@ public class RunCommand
 	 * @throws InterruptedException
 	 */
 	public static int run(String command) throws IOException, InterruptedException {
+		return run(command, null, null);
+	}
+
+	/**
+	 * Run the input command using the Runtime process and return the program's exit value.
+	 * 
+	 * @param command - The system command to be run by the process
+	 * @return Exit value of the program executed
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public static int run(String command, OutputStream stdout, OutputStream stderr) throws IOException, InterruptedException {
 		Runtime r = Runtime.getRuntime();
-				
+
 		Process p = r.exec(command);
 		//Ensure that the process finishes by getting output streams
-		StreamGobbler errGobb = new StreamGobbler(p.getErrorStream(), "ERROR");
-		StreamGobbler outGobb = new StreamGobbler(p.getInputStream(), "OUTPUT");
+		StreamGobbler errGobb = new StreamGobbler(p.getErrorStream(), "ERROR", stderr);
+		StreamGobbler outGobb = new StreamGobbler(p.getInputStream(), "OUTPUT", stdout);
 		errGobb.start();
 		outGobb.start();
+		
 		int exitVal = p.waitFor();
 		return(exitVal);
 	}
-	
-    public static void main( String[] args )
-    {
-        
-    }
+
+	public static void main( String[] args )
+	{
+
+	}
 }
 
 /**
@@ -64,39 +78,49 @@ public class RunCommand
 class StreamGobbler extends Thread
 {
 	/** Data stream to be read by the Gobbler. */
-    InputStream is;
-    /** Identifier for the type of the data stream. */
-    String type;
-    
-    /**
-     * Set the internal variables for the gobbler.
-     * 
-     * @param is - input stream to be read
-     * @param type - denotes the type of stream (err/out)
-     */
-    StreamGobbler(InputStream is, String type)
-    {
-        this.is = is;
-        this.type = type;
-    }
-    
-    /**
-     * Reads the StreamGobbler's input stream and prints its contents to System.out.
-     */
-    @Override
-    public void run()
-    {
-    	//Try to read the stream and print each line to the System.out
-        try
-        {
-            InputStreamReader isr = new InputStreamReader(is);
-            BufferedReader br = new BufferedReader(isr);
-            String line=null;
-            while ( (line = br.readLine()) != null)
-                System.out.println(type + ">" + line);    
-            } catch (IOException ioe)
-              {
-                ioe.printStackTrace();  
-              }
-    }
+	InputStream is;
+	/** Identifier for the type of the data stream. */
+	String type;
+
+	OutputStream os = null;
+
+	/**
+	 * Set the internal variables for the gobbler.
+	 * 
+	 * @param is - input stream to be read
+	 * @param type - denotes the type of stream (err/out)
+	 */
+	StreamGobbler(InputStream is, String type, OutputStream os)
+	{
+		this.is = is;
+		this.type = type;
+		this.os = os;
+	}
+
+	/**
+	 * Reads the StreamGobbler's input stream and prints its contents to System.out.
+	 */
+	@Override
+	public void run()
+	{
+	    final String LS = System.getProperty("line.separator");
+		//Try to read the stream and print each line to the System.out
+		try
+		{
+			InputStreamReader isr = new InputStreamReader(is);
+			BufferedReader br = new BufferedReader(isr);
+			String line=null;
+			while ( (line = br.readLine()) != null) {
+				System.out.println(type + ">" + line);
+				if (os != null) {
+				    os.write((line + LS).getBytes());
+				    os.flush();
+				}
+			}
+			if (os != null) os.close();
+		} catch (IOException ioe)
+		{
+			ioe.printStackTrace();  
+		}
+	}
 }
