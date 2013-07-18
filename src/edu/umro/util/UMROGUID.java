@@ -20,6 +20,8 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.rmi.server.UID;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 import java.util.StringTokenizer;
 
@@ -43,7 +45,6 @@ public class UMROGUID {
     /** Flag to determine whether MAC address has been initialized. */
     private static boolean initialized = false;
 
-    // ----------------------------------------------------------------
 
     /**
      * Generate a DICOM compliant GUID using the UMRO root.
@@ -83,12 +84,35 @@ public class UMROGUID {
 
         // concatenate values to make it into a DICOM GUID.
         String guid = UMRO_ROOT_GUID + macAddress + "." + unique + "." + time
-        + "." + count;
+                + "." + count;
 
         return guid;
     }
 
-    // ----------------------------------------------------------------
+
+    private static SimpleDateFormat dicomDateFormat = new SimpleDateFormat("yyyyMMdd");
+    private static SimpleDateFormat dicomTimeFormat = new SimpleDateFormat("HHmmss");
+
+
+    /**
+     * Return the given date formatted formatted for DICOM consumption 
+     * @param date
+     * @return Date in DICOM format.
+     */
+    public static String dicomDate(Date date) {
+        return dicomDateFormat.format(date);
+    }
+
+
+    /**
+     * Return the given time formatted for DICOM consumption 
+     * @param date
+     * @return Time in DICOM format.
+     */
+    public static String dicomTime(Date date) {
+        return dicomTimeFormat.format(date);
+    }
+
 
     /**
      * Main for testing.  No parameters required.
