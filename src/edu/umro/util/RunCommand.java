@@ -62,10 +62,32 @@ public class RunCommand
 		int exitVal = p.waitFor();
 		return(exitVal);
 	}
-
-	public static void main( String[] args )
+	
+	
+	/**
+	 * Run command.  Allows command parameters to be listed in separate
+	 * strings.  This fixes the problem where items need to be quoted.
+	 * 
+	 * @param args List containing name of executable and parameters.
+	 * @param stdout Place to send standard output.  May be null.
+	 * @param stderr Place to send standard error.  May be null.
+	 * @return Exit code of program.
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public static int runArgs(String[] args, OutputStream stdout, OutputStream stderr) throws IOException, InterruptedException
 	{
+        Runtime r = Runtime.getRuntime();
 
+        Process p = r.exec(args);
+        //Ensure that the process finishes by getting output streams
+        StreamGobbler errGobb = new StreamGobbler(p.getErrorStream(), "ERROR", stderr);
+        StreamGobbler outGobb = new StreamGobbler(p.getInputStream(), "OUTPUT", stdout);
+        errGobb.start();
+        outGobb.start();
+        
+        int exitVal = p.waitFor();
+        return(exitVal);
 	}
 }
 
