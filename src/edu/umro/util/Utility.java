@@ -171,9 +171,10 @@ public class Utility {
      * @throws RemoteException If file does not exist, has no read permission, etc..
      */
     public static byte[] readBinFile(File file) {
+        FileInputStream fis = null;
         try {
-            byte[] buffer = new byte[(int)file.length()];
-            FileInputStream fis = new FileInputStream(file);
+            byte[] buffer = new byte[(int) file.length()];
+            fis = new FileInputStream(file);
             long actual = fis.read(buffer);
             if (actual != buffer.length) {
                 throw new RuntimeException("Error reading file " + file.getAbsolutePath() + " .  Expected " + buffer.length + " bytes but got " + actual);
@@ -182,6 +183,16 @@ public class Utility {
         }
         catch (Exception e) {
             throw new RuntimeException("Error reading file " + file.getAbsolutePath() + " : " + e);
+        }
+        finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                }
+                catch (Exception e) {
+                    ;
+                }
+            }
         }
     }
 
@@ -207,4 +218,66 @@ public class Utility {
         return text.toString();
     }
 
+    /**
+     * Recursively delete all of the files in a directory tree. The directory
+     * itself will be deleted.
+     * 
+     * @param directory
+     *            Top level file or directory whose files will be deleted. If
+     *            this is a regular file, then just this file will be deleted.
+     * 
+     * @throws SecurityException
+     *             If a file can not be deleted.
+     */
+    public static void deleteFileTree(File directory) throws SecurityException {
+        if (directory.isDirectory()) {
+            for (File child : directory.listFiles())
+                deleteFileTree(child);
+        }
+        directory.delete();
+        if (directory.exists()) throw new SecurityException("Unable to delete " + directory.getAbsolutePath());
+    }
+
+    /**
+     * Compare two files to determine if they have exactly the same content.
+     * 
+     * @param a
+     *            First file.
+     * 
+     * @param b
+     *            Second file.
+     * 
+     * @return True if they are the same, false if any differences.
+     * 
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    public static boolean compareFiles(File a, File b) throws FileNotFoundException, IOException {
+        if (a.length() != b.length()) return false;
+        FileInputStream fisA = new FileInputStream(a);
+        FileInputStream fisB = new FileInputStream(b);
+        final int BUF_LEN = 1024 * 1024;
+        byte[] bufferA = new byte[BUF_LEN];
+        byte[] bufferB = new byte[BUF_LEN];
+
+        int lenA;
+        int lenB;
+        try {
+            while (((lenA = fisA.read(bufferA)) != -1) && ((lenB = fisB.read(bufferB)) != -1)) {
+                if (lenA != lenB) return false;
+                for (int l = 0; l < lenA; l++)
+                    if (bufferA[l] != bufferB[l]) return false;
+            }
+        }
+        finally {
+            try {
+                fisA.close();
+            }
+            finally {
+                fisB.close();
+            }
+        }
+
+        return true;
+    }
 }

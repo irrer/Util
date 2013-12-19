@@ -107,6 +107,19 @@ public class Log {
             ;
         }
     }
+    
+    /**
+     * Format a <code>Throwable</code>.
+     * 
+     * @param throwable Contains description and stack trace.
+     * 
+     * @return Human readable version of <code>Throwable</code> and stack trace.
+     */
+    public static String fmtEx(Throwable throwable) {
+        StringBuffer buf = new StringBuffer(throwable.toString());
+        for (StackTraceElement ste : throwable.getStackTrace()) buf.append("\n    " + ste);
+        return buf.toString();
+    }
 
 
     /**

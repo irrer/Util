@@ -251,16 +251,19 @@ public class XML {
 
     public static void replaceControlCharacters(Node node, char replacement) {
         String value = node.getNodeValue();
-        if ((value != null) && value.matches(".*[^\r\n\t -~].*")) {
+        if (value != null) {
+            boolean modified = false;
 
             byte[] bytes = value.getBytes();
-            for(int b = 0; b < bytes.length; b++) {
+            for (int b = 0; b < bytes.length; b++) {
                 if (!isRegularChar(bytes[b])) {
-                    bytes[b] = (byte)replacement;
+                    bytes[b] = (byte) replacement;
+                    modified = true;
                 }
             }
-            node.setNodeValue(new String(bytes));
+            if (modified) node.setNodeValue(new String(bytes));
         }
+
         NamedNodeMap attrList = node.getAttributes();
         for (int a = 0; (attrList != null) && (a < attrList.getLength()); a++) {
             replaceControlCharacters(attrList.item(a), replacement);
