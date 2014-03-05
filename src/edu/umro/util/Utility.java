@@ -239,6 +239,34 @@ public class Utility {
     }
 
     /**
+     * Recursively copy all of the files in a directory tree.
+     * 
+     * @param src
+     *            Source file/directory
+     * 
+     * @param dest
+     *            Destination file/directory is expected to not exist.
+     * 
+     * @throws SecurityException
+     *             If a file can not be copied.
+     * @throws IOExceptionIf
+     *             a file can not be copied.
+     * @throws UMROException
+     *             If a file can not be copied.
+     */
+    public static void copyFileTree(File src, File dest) throws SecurityException, IOException, UMROException {
+        if (src.isDirectory()) {
+            dest.mkdirs();
+            for (File child : src.listFiles())
+                copyFileTree(child, new File(dest, child.getName()));
+        }
+        else {
+            dest.createNewFile();
+            writeFile(dest, readBinFile(src));
+        }
+    }
+
+    /**
      * Compare two files to determine if they have exactly the same content.
      * 
      * @param a
@@ -279,5 +307,13 @@ public class Utility {
         }
 
         return true;
+    }
+    
+    
+    public static void main(String[] args) throws SecurityException, IOException, UMROException {
+        String srcName = "D:\\tmp\\copy\\src";
+        String destName = "D:\\tmp\\copy\\dest";
+        
+        copyFileTree(new File(srcName), new File(destName));
     }
 }
