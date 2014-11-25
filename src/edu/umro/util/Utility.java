@@ -149,8 +149,10 @@ public class Utility {
      * name, can not read, etc.
      */
     public static String readFile(File file) throws UMROException {
+        FileInputStream fileInputStream = null;
         try {
-            return readInputStream(new FileInputStream(file));
+            fileInputStream = new FileInputStream(file);
+            return readInputStream(fileInputStream);
         }
         catch (FileNotFoundException ex) {
             throw new UMROException("Error, file '" + file.getAbsolutePath() + "' not found. Exception: " + ex);
@@ -158,6 +160,18 @@ public class Utility {
         catch (IOException ex) {
             throw new UMROException("Error while reading file '" + file.getAbsolutePath() + "'. Exception: " + ex);
         }
+        finally {
+            if (fileInputStream != null) {
+                try {
+                    fileInputStream.close();
+                    fileInputStream = null;
+                }
+                catch (IOException ex) {
+                    throw new UMROException("Error while reading file '" + file.getAbsolutePath() + "'. Exception: " + ex);
+                }
+            }
+        }
+
     }
 
     
