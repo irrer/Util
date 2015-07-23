@@ -299,9 +299,15 @@ public class JarInfo {
                 // If this is true, then we have a real jar file.
                 if (fullJarFilePath.startsWith(prefix)) {
                     fullJarFilePath = fullJarFilePath.substring(0 + prefix.length());
-                    JarFile jarFile = new JarFile(fullJarFilePath);
-                    manifest = jarFile.getManifest();
-                    return manifest;
+                    JarFile jarFile = null;
+                    try {
+                        jarFile = new JarFile(fullJarFilePath);
+                        manifest = jarFile.getManifest();
+                        return manifest;
+                    }
+                    finally {
+                        if (jarFile != null) jarFile.close();
+                    }
                 }
                 // Otherwise, not a real jar file.  Use the manifest file directly.  This
                 // should only happen in development mode.
