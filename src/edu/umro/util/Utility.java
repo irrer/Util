@@ -94,27 +94,37 @@ public class Utility {
      * @param text Text to write.
      */
     public static void writeFile(File file, byte[] text) throws UMROException {
+        FileOutputStream out = null;
         try {
             if (!file.exists()) {
                 file.createNewFile();
             }
-            FileOutputStream out = new FileOutputStream(file);
+            out = new FileOutputStream(file);
             out.write(text);
             out.flush();
             out.close();
             out = null;
         }
         catch (FileNotFoundException ex) {
-            throw new UMROException("Could not find file " + file);
+            throw new UMROException("Could not find file " + file + " : " + ex);
         }
         catch (IOException ex) {
-            throw new UMROException("Unable to write to file " + file);
+            throw new UMROException("Unable to write to file " + file + " : " + ex);
         }
         catch (SecurityException ex) {
-            throw new UMROException("Not permitted to create file " + file);
+            throw new UMROException("Not permitted to create file " + file + " : " + ex);
+        }
+        finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+            }
+            catch (IOException ex) {
+                throw new UMROException("Unable to close to file " + file + " : " + ex);
+            }
         }
     }
-
 
     public static void writeFile(final String sFilePath, final String content) throws UMROException {
         writeFile(new File(sFilePath), content.getBytes());
@@ -124,17 +134,25 @@ public class Utility {
     public static boolean isFileExist(final String sFilePath) throws UMROException {
 
         boolean bExist = false;
+        FileInputStream fis = null;
         File f = new File(sFilePath);
         try {
             // force test for file existing.
-            new FileInputStream(f);
+            fis = new FileInputStream(f);
             if (f.exists()) {
                 bExist = true;
             }
 
-        }
-        catch (FileNotFoundException ex) {
+        } catch (FileNotFoundException ex) {
             throw new UMROException(ex.getMessage());
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (Throwable t) {
+                    ;
+                }
+            }
         }
         return bExist;
     }
@@ -323,11 +341,77 @@ public class Utility {
         return true;
     }
     
+    /**
+     * Recursively compare two directories or files and throw an exception if their content is different.
+     * 
+     * @param a
+     *            One file or directory.
+     *
+     * @param b
+     *            The other file or directory.
+     * @return
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    public static void compareDirs(File a, File b) throws FileNotFoundException, IOException {
+        if (a.isDirectory() && b.isDirectory()) {
+            File[] aList = a.listFiles();
+            File[] bList = b.listFiles();
+            if (aList.length != bList.length) {
+                throw new RuntimeException("Missing file");
+            }
+            for (File aa : aList) {
+                compareDirs(aa, new File(b, aa.getName()));
+            }
+        } else {
+            if (!(a.isFile() && b.isFile() && compareFiles(a, b))) {
+                throw new RuntimeException("files not equal");
+            }
+        }
+    }
+
+    /**
+     * Recursively compare two directories or files and throw an exception if
+     * their content is different.  Any file access errors will result in a return of 'false';
+     * 
+     * @param a
+     *            One file or directory.
+     *
+     * @param b
+     *            The other file or directory.
+     *            
+     * @return True if the same, false if different.
+     * 
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    public static boolean compareFolders(File a, File b) {
+        try {
+            compareDirs(a, b);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
     
+    
+    public static void cmprStuff(int i) {
+        System.out.println("cmprStuff i: " + i);
+    }
+    
+    public static String newnessly() {
+        return "better newnosity string";
+    }
+
     public static void main(String[] args) throws SecurityException, IOException, UMROException {
         String srcName = "D:\\tmp\\copy\\src";
         String destName = "D:\\tmp\\copy\\dest";
         
-        copyFileTree(new File(srcName), new File(destName));
+        //copyFileTree(new File(srcName), new File(destName));
+        System.out.println("comp dir: " + compareFolders(new File(srcName), new File(destName)));
     }
+    
+    /** Standard date format */
+    public static final SimpleDateFormat standardDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+
 }
