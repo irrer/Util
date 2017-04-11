@@ -1,3 +1,4 @@
 
-	<h2>Util</h2>
-	Java utilities
+## Java utilities
+
+General purpose Java utilities.
