@@ -1,129 +1,121 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	
-	<!--
-   Copyright 2012 Regents of the University of Michigan
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+<!--
+Copyright 2017 Regents of the University of Michigan
 
-       http://www.apache.org/licenses/LICENSE-2.0
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 -->
-	
-	<!-- author Jim Irrer  irrer@umich.edu -->
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>edu.umro</groupId>
-	<artifactId>util</artifactId>
-	<packaging>jar</packaging>
-	<version>1.3.16</version>
-	<name>${artifactId}</name>
-	<description>General utilities</description>
-	<distributionManagement>
-		<repository>
-			<id>thirdParty</id>
-			<name>Internal Releases</name>
-			<url>http://141.214.124.203:8081/nexus/content/repositories/thirdparty</url>
-		</repository>
-		<snapshotRepository>
-			<id>snapshots</id>
-			<name>Internal Snapshots</name>
-			<url>http://141.214.124.203:8081/nexus/content/repositories/snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
-	<properties>
 
-      <!--  tell the compiler we can use 1.6 -->
-      <maven.compiler.source>1.6</maven.compiler.source>
-      <maven.compiler.target>1.6</maven.compiler.target>
+    <!-- author Jim Irrer  irrer@umich.edu -->
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>edu.umro</groupId>
+    <artifactId>util</artifactId>
+    <packaging>jar</packaging>
+    <version>1.3.16</version>
+    <name>${artifactId}</name>
+    <description>General utilities</description>
+    <distributionManagement>
+        <repository>
+            <id>thirdParty</id>
+            <name>Internal Releases</name>
+            <url>http://141.214.124.203:8081/nexus/content/repositories/thirdparty</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>Internal Snapshots</name>
+            <url>http://141.214.124.203:8081/nexus/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+    <properties>
+
+    <!--  tell the compiler we can use 1.6 -->
+    <maven.compiler.source>1.6</maven.compiler.source>
+    <maven.compiler.target>1.6</maven.compiler.target>
 
     </properties>
-	<repositories />
+    <repositories />
 
-	<dependencies>
+    <dependencies>
+        <dependency> <groupId>junit</groupId>     <artifactId>junit</artifactId>        <version>4.4</version>      <scope>test</scope> </dependency>
+        <dependency> <groupId>pixelmed</groupId>  <artifactId>pixelmed</artifactId>     <version>20170406</version>                     </dependency>
+        <dependency> <groupId>org.slf4j</groupId> <artifactId>slf4j-api</artifactId>    <version>1.7.25</version>                       </dependency>
+        <dependency> <groupId>org.slf4j</groupId> <artifactId>slf4j-simple</artifactId> <version>1.7.25</version>                       </dependency>
+    </dependencies>
+    <!-- 
+        <dependency> <groupId>log4j</groupId>     <artifactId>log4j</artifactId>     <version>1.2.17</version>                       </dependency>
+     -->
+    <build>
+        <sourceDirectory>${project.basedir}/src</sourceDirectory>
+        <resources>
+            <resource>
+                <filtering>false</filtering>
+                <directory>src</directory>
+                <includes>
+                    <include>**</include>
+                </includes>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <filtering>false</filtering>
+                <directory>testing</directory>
+            </testResource>
+        </testResources>
+        <plugins>
 
-		<!-- JUNIT DEPENDENCY FOR TESTING -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.4</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>pixelmed</groupId>
-			<artifactId>pixelmed</artifactId>
-			<version>20160530</version>
-		</dependency>
-	
-	</dependencies>
-	<build>
-		<sourceDirectory>${project.basedir}/src</sourceDirectory>
-		<resources>
-			<resource>
-				<filtering>false</filtering>
-				<directory>src</directory>
-				<includes>
-					<include>**</include>
-				</includes>
-				<excludes>
-					<exclude>**/*.java</exclude>
-				</excludes>
-			</resource>
-		</resources>
-		<testResources>
-			<testResource>
-				<filtering>false</filtering>
-				<directory>testing</directory>
-			</testResource>
-		</testResources>
-		<plugins>
-	
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.6</version>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.6</version>
 
-				<executions>
-					<execution>
-						<id>generate-manifest-with-timestamp</id>
-						<phase>test</phase>
-						<configuration>
-							<tasks>
-								<delete file="target/MANIFEST.MF" />
-								<copy file="MANIFEST.MF" todir="target" />
-								<echo>Hello from timestamp</echo>
-								<tstamp>
-									<format property="TIMESTAMP" pattern="yyyy-MMM-dd hh:mm:ss aa" locale="en,US" />
-								</tstamp>
-								<replace file="target/MANIFEST.MF">
+                <executions>
+                    <execution>
+                        <id>generate-manifest-with-timestamp</id>
+                        <phase>test</phase>
+                        <configuration>
+                            <tasks>
+                                <delete file="target/MANIFEST.MF" />
+                                <copy file="MANIFEST.MF" todir="target" />
+                                <echo>Hello from timestamp</echo>
+                                <tstamp>
+                                    <format property="TIMESTAMP" pattern="yyyy-MMM-dd hh:mm:ss aa" locale="en,US" />
+                                </tstamp>
+                                <replace file="target/MANIFEST.MF">
                                     <replacefilter token="@@BUILD_DATE@@" value="${TIMESTAMP}"/>
                                     <replacefilter token="@@DEVELOPER@@" value="${user.name}"/>
-							    </replace>
-							</tasks>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			
-			
+                                </replace>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
-                        <archive>
-                            <manifestFile>target/MANIFEST.MF</manifestFile>
-                        </archive>
+                    <archive>
+                        <manifestFile>target/MANIFEST.MF</manifestFile>
+                    </archive>
                 </configuration>
             </plugin>
 
@@ -143,16 +135,14 @@
                 </executions>
             </plugin>
             <plugin>
-	          <groupId>org.apache.maven.plugins</groupId>
-	          <artifactId>maven-compiler-plugin</artifactId>
-	          <version>2.3.2</version>
-	          <configuration>
-	            <source>${maven.compiler.source}</source>
-	            <target>${maven.compiler.target}</target>
-	          </configuration>
-	        </plugin>
-		</plugins>
-
-	</build>
-
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-compiler-plugin</artifactId>
+              <version>2.3.2</version>
+              <configuration>
+                <source>${maven.compiler.source}</source>
+                <target>${maven.compiler.target}</target>
+              </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
