@@ -51,10 +51,9 @@ limitations under the License.
         <dependency> <groupId>junit</groupId>     <artifactId>junit</artifactId>        <version>4.4</version>      <scope>test</scope> </dependency>
         <dependency> <groupId>pixelmed</groupId>  <artifactId>pixelmed</artifactId>     <version>20170406</version>                     </dependency>
         <dependency> <groupId>org.slf4j</groupId> <artifactId>slf4j-api</artifactId>    <version>1.7.25</version>                       </dependency>
-        <dependency> <groupId>org.slf4j</groupId> <artifactId>slf4j-simple</artifactId> <version>1.7.25</version>                       </dependency>
     </dependencies>
     <!-- 
-        <dependency> <groupId>log4j</groupId>     <artifactId>log4j</artifactId>     <version>1.2.17</version>                       </dependency>
+        <dependency> <groupId>org.slf4j</groupId> <artifactId>slf4j-simple</artifactId> <version>1.7.25</version>                       </dependency>
      -->
     <build>
         <sourceDirectory>${project.basedir}/src</sourceDirectory>
