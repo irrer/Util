@@ -16,19 +16,15 @@ package edu.umro.util;
  * limitations under the License.
  */
 
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.ClipboardOwner;
-import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
+import java.awt.*;
+import java.awt.datatransfer.*;
 
 
 /**
  * Copy text to the clipboard so that the
- * user may paste it into another application. 
- * 
- * @author Jim Irrer  irrer@umich.edu 
+ * user may paste it into another application.
  *
+ * @author Jim Irrer  irrer@umich.edu
  */
 
 class CopyToClipboard {
@@ -36,7 +32,7 @@ class CopyToClipboard {
         /**
          * Copy the text to the clipboard so that the
          * user may paste it into another application.
-         * 
+         *
          * @param text Text to copy.
          */
         public CopyToClip(String text) {
@@ -55,7 +51,7 @@ class CopyToClipboard {
     /**
      * Copy the text to the clipboard so that the
      * user may paste it into another application.
-     * 
+     *
      * @param text Text to copy.
      */
     public static void copy(String text) {

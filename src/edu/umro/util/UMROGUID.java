@@ -16,33 +16,33 @@ package edu.umro.util;
  * limitations under the License.
  */
 
-import java.net.SocketException;
-import java.net.UnknownHostException;
-import java.rmi.server.UID;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Random;
-import java.util.StringTokenizer;
+import java.net.*;
+import java.rmi.server.*;
+import java.text.*;
+import java.util.*;
 
 /**
  * Generate DICOM compliant GUIDs with authorship by UMRO.
- * 
- * @author Jim Irrer  irrer@umich.edu 
  *
+ * @author Jim Irrer  irrer@umich.edu
  */
 
 public class UMROGUID {
 
-    /** The root GUID for University of Michigan Radiation Oncology. */
+    /**
+     * The root GUID for University of Michigan Radiation Oncology.
+     */
     public static String UMRO_ROOT_GUID = "1.3.6.1.4.1.22361.";
 
-    /** The MAC address of this machine.  This is used to make
+    /**
+     * The MAC address of this machine.  This is used to make
      * the GUID unique across machines.
      */
     private static long macAddress = 0;
 
-    /** Flag to determine whether MAC address has been initialized. */
+    /**
+     * Flag to determine whether MAC address has been initialized.
+     */
     private static boolean initialized = false;
 
 
@@ -50,8 +50,8 @@ public class UMROGUID {
      * Generate a DICOM compliant GUID using the UMRO root.
      *
      * @return A DICOM compliant GUID using the UMRO root.
-     * @throws SocketException 
-     * @throws UnknownHostException 
+     * @throws SocketException
+     * @throws UnknownHostException
      */
     public static synchronized String getUID() throws UnknownHostException {
 
@@ -60,8 +60,7 @@ public class UMROGUID {
             initialized = true;
             try {
                 macAddress = OpSys.getMACAddress();
-            }
-            catch (SocketException e) {
+            } catch (SocketException e) {
                 macAddress = Long.parseLong(OpSys.getHostIPAddress().replace('.', 'x').replaceAll("x", ""));
                 // if localhost (127.0.0.1) is returned, then try something random instead.  The risk is
                 // that the same 2^63 random number will be returned twice, but it is a low risk. 
@@ -95,7 +94,8 @@ public class UMROGUID {
 
 
     /**
-     * Return the given date formatted formatted for DICOM consumption 
+     * Return the given date formatted formatted for DICOM consumption
+     *
      * @param date
      * @return Date in DICOM format.
      */
@@ -105,7 +105,8 @@ public class UMROGUID {
 
 
     /**
-     * Return the given time formatted for DICOM consumption 
+     * Return the given time formatted for DICOM consumption
+     *
      * @param date
      * @return Time in DICOM format.
      */

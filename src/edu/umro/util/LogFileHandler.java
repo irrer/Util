@@ -16,8 +16,8 @@ package edu.umro.util;
  * limitations under the License.
  */
 
-import java.io.IOException;
-import java.util.logging.FileHandler;
+import java.io.*;
+import java.util.logging.*;
 
 /**
  * Wrap the <code>FileHandler</code> constructors so that they
@@ -26,9 +26,8 @@ import java.util.logging.FileHandler;
  * My personal opinion is that this is a bug in java.util.logging,
  * that it does not allow you to set the formatter in the logging.properties
  * file to your own custom formatter.
- * 
- * @author Jim Irrer  irrer@umich.edu 
  *
+ * @author Jim Irrer  irrer@umich.edu
  */
 
 public class LogFileHandler extends FileHandler {
@@ -43,9 +42,9 @@ public class LogFileHandler extends FileHandler {
 
     /**
      * Construct a default FileHandler.
-     * 
-     * @throws IOException 
-     * @throws SecurityException 
+     *
+     * @throws IOException
+     * @throws SecurityException
      */
     public LogFileHandler() throws SecurityException, IOException {
         super();
@@ -55,10 +54,10 @@ public class LogFileHandler extends FileHandler {
 
     /**
      * Construct a FileHandler to write to the given filename.
-     * 
+     *
      * @param pattern
-     * @throws IOException 
-     * @throws SecurityException 
+     * @throws IOException
+     * @throws SecurityException
      */
     public LogFileHandler(String pattern) throws SecurityException, IOException {
         super(pattern);
@@ -68,26 +67,26 @@ public class LogFileHandler extends FileHandler {
 
     /**
      * Construct a FileHandler to write to the given filename, with optional append.
-     * 
+     *
      * @param pattern
      * @param append
-     * @throws IOException 
-     * @throws SecurityException 
+     * @throws IOException
+     * @throws SecurityException
      */
     public LogFileHandler(String pattern, boolean append) throws SecurityException, IOException {
         super(pattern, append);
-        initialize();        
+        initialize();
     }
 
 
     /**
      * Construct a FileHandler to write to a set of files.
-     * 
+     *
      * @param pattern
      * @param limit
      * @param count
-     * @throws IOException 
-     * @throws SecurityException 
+     * @throws IOException
+     * @throws SecurityException
      */
     public LogFileHandler(String pattern, int limit, int count) throws SecurityException, IOException {
         super(pattern, limit, count);
@@ -97,13 +96,13 @@ public class LogFileHandler extends FileHandler {
 
     /**
      * Construct a FileHandler to write to a set of files with optional append.
-     * 
+     *
      * @param pattern
      * @param limit
      * @param count
      * @param append
-     * @throws IOException 
-     * @throws SecurityException 
+     * @throws IOException
+     * @throws SecurityException
      */
     public LogFileHandler(String pattern, int limit, int count, boolean append) throws SecurityException, IOException {
         super(pattern, limit, count, append);

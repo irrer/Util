@@ -20,11 +20,11 @@ package edu.umro.util;
  * Representation of a version.  Versions are viewed
  * as a series of positive integers separated by single
  * periods (.).  They may not contain any other characters.
- * 
+ * <p>
  * The maximum number of integer fields is restricted because
  * if a very large number is encountered then the string was
  * probably used in error.
- * 
+ * <p>
  * In particular, alpha characters are not allowed because
  * they can introduce ambiguity when comparing versions.
  * For example, if comparing versions 1.0.9 and 1.0.10a, the
@@ -32,18 +32,19 @@ package edu.umro.util;
  * '9', and would be considered less than '9', which is not
  * the expected order.  Other cases mixing several alpha
  * and numeric values become even more complicated.
- * 
- * @author Jim Irrer  irrer@umich.edu 
  *
+ * @author Jim Irrer  irrer@umich.edu
  */
 public class Version implements Comparable<Version> {
 
-    /** List of levels for this version.  For example, a version
+    /**
+     * List of levels for this version.  For example, a version
      * of 1.0.3 would have fieldList = { 1, 0, 3 };
      */
     private int[] fieldList = null;
 
-    /** Maximum number of fields in the version specification.  In
+    /**
+     * Maximum number of fields in the version specification.  In
      * most cases the number of fields will be about 3.  If a very
      * large number is attained then it probably means that the
      * wrong string was used.
@@ -51,17 +52,12 @@ public class Version implements Comparable<Version> {
     public static final int MAX_VERSION_FIELDS = 100;
 
 
-
-
     /**
      * Construct a version from text.
-     * 
-     * @param name Name of service
-     * 
+     *
+     * @param name        Name of service
      * @param versionText In a dot separated form such as: 1.2.34
-     * 
      * @param description Description of service.
-     * 
      * @throws UMROException
      */
     public Version(String versionText) throws UMROException {
@@ -86,11 +82,9 @@ public class Version implements Comparable<Version> {
     }
 
 
-
-
     /**
      * Get the version of this service.
-     * 
+     *
      * @return Version as text.
      */
     public String formatToText() {
@@ -102,8 +96,6 @@ public class Version implements Comparable<Version> {
     }
 
 
-
-
     /**
      * Convert this version to a string.
      */
@@ -111,7 +103,6 @@ public class Version implements Comparable<Version> {
     public String toString() {
         return formatToText();
     }
-
 
 
     /**

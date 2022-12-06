@@ -16,41 +16,40 @@ package edu.umro.util;
  * limitations under the License.
  */
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.jar.Attributes;
-import java.util.jar.JarFile;
-import java.util.jar.Manifest;
+import java.io.*;
+import java.net.*;
+import java.text.*;
+import java.util.*;
+import java.util.jar.*;
 
 
 /**
  * Provide general and standard support for declaring,
  * discovering, and showing application versions and
  * other associated information.
- * 
- * @author Jim Irrer  irrer@umich.edu 
  *
+ * @author Jim Irrer  irrer@umich.edu
  */
 public class JarInfo {
 
-    /** Manifest of the jar that was used to load this class. */
+    /**
+     * Manifest of the jar that was used to load this class.
+     */
     private Manifest manifest = null;
 
-    /** Name of manifest file. */
+    /**
+     * Name of manifest file.
+     */
     private static final String MANIFEST_FILE_NAME = "MANIFEST.MF";
 
-    /** The full path name of the jar file from which this class was loaded. */
+    /**
+     * The full path name of the jar file from which this class was loaded.
+     */
     private String fullJarFilePath = null;
 
-    /** The class for which version information is being provided. */
+    /**
+     * The class for which version information is being provided.
+     */
     private Class<?> clss = null;
 
     public JarInfo(Class<?> clss) {
@@ -59,11 +58,9 @@ public class JarInfo {
 
     /**
      * Get a value from the manifest associated with this Java package.
-     * 
+     *
      * @param key Name of value.
-     * 
      * @return Value from manifest.
-     * 
      * @throws UMROException
      */
     private String getProjectManifestValue(String key) throws UMROException {
@@ -78,18 +75,16 @@ public class JarInfo {
         if (attributes == null) {
             return null;
         }
-        String value = (String)attributes.get(new Attributes.Name(key));
+        String value = (String) attributes.get(new Attributes.Name(key));
         return value;
     }
 
 
     /**
      * Get a value from the main part of the manifest associated with this Java package.
-     * 
+     *
      * @param key Name of value.
-     * 
      * @return Value from manifest.
-     * 
      * @throws UMROException
      */
     public String getMainManifestValue(String key) throws UMROException {
@@ -97,16 +92,15 @@ public class JarInfo {
         if (attributes == null) {
             return null;
         }
-        String value = (String)attributes.get(new Attributes.Name(key));
+        String value = (String) attributes.get(new Attributes.Name(key));
         return value;
     }
-    
-    
+
+
     /**
      * Get list of attributes.
-     * 
+     *
      * @return List of attributes.
-     * 
      * @throws UMROException
      */
     public Attributes getMainAttributes() throws UMROException {
@@ -116,13 +110,10 @@ public class JarInfo {
 
     /**
      * Get a value from the main part of the manifest associated with this Java package.
-     * 
-     * @param key Name of value.
-     * 
+     *
+     * @param key  Name of value.
      * @param dflt Default value if there is a problem.
-     * 
      * @return Value from manifest.
-     * 
      */
     public String getMainManifestValue(String key, String dflt) {
         try {
@@ -130,10 +121,9 @@ public class JarInfo {
             if (attributes == null) {
                 return dflt;
             }
-            String value = (String)attributes.get(new Attributes.Name(key));
+            String value = (String) attributes.get(new Attributes.Name(key));
             return (value == null) ? dflt : value;
-        }
-        catch (UMROException e) {
+        } catch (UMROException e) {
             return dflt;
         }
     }
@@ -141,9 +131,9 @@ public class JarInfo {
 
     /**
      * Get the name of the application with no version information.
-     * 
+     *
      * @return
-     * @throws UMROException 
+     * @throws UMROException
      */
     public String getApplicationName() throws UMROException {
         return getProjectManifestValue("ApplicationName");
@@ -152,7 +142,7 @@ public class JarInfo {
 
     /**
      * Get a description of the application.
-     *  
+     *
      * @return
      */
     public String getApplicationDescription() throws UMROException {
@@ -162,7 +152,7 @@ public class JarInfo {
 
     /**
      * Get the version of the application with no name.
-     * 
+     *
      * @return
      */
     public String getApplicationVersion() throws UMROException {
@@ -171,7 +161,7 @@ public class JarInfo {
 
     /**
      * Get the build date of this version of the application.
-     * 
+     *
      * @return The build date.
      */
     public String getBuildDate() throws UMROException {
@@ -180,7 +170,7 @@ public class JarInfo {
 
     /**
      * Get the main executable class for this jar.
-     * 
+     *
      * @return The main class.
      */
     public String getMainClass() throws UMROException {
@@ -190,7 +180,7 @@ public class JarInfo {
 
     /**
      * Get the build time in as a <code>Date</code> of this version of the application.
-     * 
+     *
      * @return The build date.
      */
     public Date getBuildTime() throws UMROException {
@@ -206,10 +196,9 @@ public class JarInfo {
         try {
             Date date = simpleDateFormat.parse(buildDate);
             return date;
-        }
-        catch (ParseException e) {
+        } catch (ParseException e) {
             String msg =
-                "Could not find parse build date '" + buildDate + "' to a date using format '" + format + "'.";
+                    "Could not find parse build date '" + buildDate + "' to a date using format '" + format + "'.";
             throw new UMROException(msg);
         }
     }
@@ -218,9 +207,8 @@ public class JarInfo {
     /**
      * Get the full path name of the jar file that was used to
      * load this class;
-     * 
+     *
      * @return The full path of the jar file.
-     * 
      * @throws UMROException
      */
     public String getFullJarFilePath() throws UMROException {
@@ -231,7 +219,7 @@ public class JarInfo {
 
     /**
      * Get the user id of the builder of the application.
-     * 
+     *
      * @return The developers user id.
      */
     public String getBuiltBy() throws UMROException {
@@ -241,7 +229,7 @@ public class JarInfo {
 
     /**
      * Get the base name of the jar.
-     * 
+     *
      * @return The jar base name.
      */
     public String getJarName() throws UMROException {
@@ -251,7 +239,7 @@ public class JarInfo {
 
     /**
      * Get the implementation version of the jar.
-     * 
+     *
      * @return The implementation version of the jar.
      */
     public String getImplementationVersion() throws UMROException {
@@ -260,7 +248,7 @@ public class JarInfo {
 
     /**
      * Get the implementation vendor of the jar.
-     * 
+     *
      * @return The implementation version of the jar.
      */
     public String getImplementationVendor() throws UMROException {
@@ -270,7 +258,7 @@ public class JarInfo {
 
     /**
      * Get the jar description.
-     * 
+     *
      * @return The jar description.
      */
     public String getJarDescription() throws UMROException {
@@ -280,13 +268,12 @@ public class JarInfo {
 
     /**
      * Get the manifest of the jar file that was used to load this class.
-     * 
+     *
      * @return Manifest from jar from which this class was loaded.
-     * 
      * @throws UMROException
      */
     private Manifest getManifest() throws UMROException {
-        if (manifest == null)  {
+        if (manifest == null) {
             try {
                 ClassLoader classLoader = clss.getClassLoader();
                 String packageName = getPackageNameOfClass(clss);
@@ -304,8 +291,7 @@ public class JarInfo {
                         jarFile = new JarFile(fullJarFilePath);
                         manifest = jarFile.getManifest();
                         return manifest;
-                    }
-                    finally {
+                    } finally {
                         if (jarFile != null) jarFile.close();
                     }
                 }
@@ -326,18 +312,16 @@ public class JarInfo {
                         if (file.canRead()) {
                             FileInputStream fis = new FileInputStream(file);
                             manifest = new Manifest(fis);
-                        }
-                        else {
+                        } else {
                             String msg =
-                                "Could not get development manifest file for class '" +
-                                clss + "'.  Try building the project with ant to create a local copy of" +
-                                "the manifest file.";
+                                    "Could not get development manifest file for class '" +
+                                            clss + "'.  Try building the project with ant to create a local copy of" +
+                                            "the manifest file.";
                             throw new UMROException(msg);
                         }
                     }
                 }
-            }
-            catch (IOException ex) {
+            } catch (IOException ex) {
                 throw new UMROException("Could not get manifest for class '" + clss.getName() + "' : " + ex);
             }
             // System.out.println(toString);  for debug only
@@ -348,23 +332,22 @@ public class JarInfo {
 
     /**
      * Show all of the manifest information.
-     *  
+     *
      * @throws UMROException
      */
-    public String toString()  {
+    public String toString() {
         try {
             getManifest();
-        }
-        catch (UMROException ex) {
+        } catch (UMROException ex) {
             return ex.toString();
         }
         StringBuffer text = new StringBuffer();
-        Map<String,Attributes> entries = manifest.getEntries();
+        Map<String, Attributes> entries = manifest.getEntries();
         Set<String> set = entries.keySet();
         Iterator<String> iter = set.iterator();
         while (iter.hasNext()) {
-            String name = (String)iter.next();
-            Attributes attributes = (Attributes)entries.get(name);
+            String name = (String) iter.next();
+            Attributes attributes = (Attributes) entries.get(name);
             text.append("Name: " + name);
             Set<Object> keyList = attributes.keySet();
             for (Object key : keyList) {
@@ -376,13 +359,11 @@ public class JarInfo {
     }
 
 
-
     /**
      * Get the name of the package associated with a class in the
      * slash separated form (as opposed to the dot separated form).
-     * 
+     *
      * @param clss The class whose package we are interested in.
-     * 
      * @return Package name of class (slash separated, not . separated).
      */
     private static String getPackageNameOfClass(Class<?> clss) {
@@ -394,19 +375,19 @@ public class JarInfo {
 
     /**
      * Show version related information.
-     * 
+     *
      * @param version Object pointing to version data.
      */
     protected static void show(JarInfo version) {
         try {
 
             System.out.println("Jar file: " + version.getFullJarFilePath());
-            Map<String,Attributes> entries = version.getManifest().getEntries();
+            Map<String, Attributes> entries = version.getManifest().getEntries();
             Set<String> set = entries.keySet();
             Iterator<String> iter = set.iterator();
             while (iter.hasNext()) {
-                String pkey = (String)iter.next();
-                Attributes attributes = (Attributes)entries.get(pkey);
+                String pkey = (String) iter.next();
+                Attributes attributes = (Attributes) entries.get(pkey);
                 {
                     System.out.println("\nPackage: " + pkey);
                     Set<Object> keyList = attributes.keySet();
@@ -437,21 +418,19 @@ public class JarInfo {
             System.out.println("    App UtilVersion            : " + version.getApplicationVersion());
             System.out.println("    App Desc                   : " + version.getApplicationDescription());
             System.out.println("    Full Jar File Path         : " + version.getFullJarFilePath());
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             System.err.println("Unexpected exception from Version: " + ex);
             ex.printStackTrace();
         }
     }
 
 
-
     /**
      * Provide a command line interface for getting application
      * information.
-     * 
+     * <p>
      * Use the '-help' option for help.
-     * 
+     *
      * @param args
      */
     public static void main(String[] args) {

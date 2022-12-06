@@ -16,66 +16,84 @@ package edu.umro.util;
  * limitations under the License.
  */
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import org.w3c.dom.*;
 
-import org.w3c.dom.Node;
+import java.io.*;
+import java.text.*;
+import java.util.*;
 
 /**
  * Define an exception that is targeted for user consumption.
- * 
- * @author Jim Irrer  irrer@umich.edu 
  *
+ * @author Jim Irrer  irrer@umich.edu
  */
 public class UMROException extends Exception {
 
-    /** Serialization ID. */
+    /**
+     * Serialization ID.
+     */
     private static final long serialVersionUID = -744294766916142471L;
-    
+
     public static final long UNDEFINED_CODE = -1;
 
-    /** Error code identifying the instance of this exception. */
+    /**
+     * Error code identifying the instance of this exception.
+     */
     public long code = UNDEFINED_CODE;
-    
-    /** Description of error. */
+
+    /**
+     * Description of error.
+     */
     public String what = "";
-    
-    /** Scope of the impact of the error. */
+
+    /**
+     * Scope of the impact of the error.
+     */
     public String scope = "";
-    
-    /** Corrective action to be taken. */
+
+    /**
+     * Corrective action to be taken.
+     */
     public String action = "";
-    
-    /** Additional background or suggestions. */
+
+    /**
+     * Additional background or suggestions.
+     */
     public String more = "";
 
-    /** Technical description of error to aid software developers. */
+    /**
+     * Technical description of error to aid software developers.
+     */
     public String progammerMessage = null;
 
-    /** Name of service that generated this exception. */
+    /**
+     * Name of service that generated this exception.
+     */
     public String serviceName = null;
 
-    /** Technical description of error to aid software developers. */
+    /**
+     * Technical description of error to aid software developers.
+     */
     public String serviceVersion = null;
 
-    /** Message time stamp format. */
+    /**
+     * Message time stamp format.
+     */
     static final SimpleDateFormat timeStampFormat = new SimpleDateFormat("yyyy MM dd HH:mm:ss.SSS");
 
     /**
      * Construct an exception with all of the expected parameters.
-     * 
-     * @param code Unique code identifying this type of exception.
-     * @param what Description of error.
-     * @param scope Scope of the impact of the error.
-     * @param action Corrective action to be taken.
-     * @param more Additional background or suggestions.
+     *
+     * @param code             Unique code identifying this type of exception.
+     * @param what             Description of error.
+     * @param scope            Scope of the impact of the error.
+     * @param action           Corrective action to be taken.
+     * @param more             Additional background or suggestions.
      * @param progammerMessage Technical description of error to aid software developers.
      */
     public UMROException(long code, String what, String scope, String action, String more, String progammerMessage) {
         super(toXML(null, code, what, scope, action, more, progammerMessage));
-        
+
         this.code = code;
         this.what = what;
         this.scope = scope;
@@ -83,9 +101,10 @@ public class UMROException extends Exception {
         this.more = more;
         this.progammerMessage = progammerMessage;
     }
-    
+
     /**
      * Construct an exception with just the programmer message.
+     *
      * @param msg
      */
     public UMROException(String msg) {
@@ -100,62 +119,53 @@ public class UMROException extends Exception {
             String codeText = XML.getValue(node, "Code/text()");
             if (codeText == null) {
                 code = 0;
-            }
-            else {
+            } else {
                 code = Long.parseLong(codeText);
             }
-        }
-        catch (NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             code = -1;
         }
-        what   = XML.getValue(node, "UserMessage/What/text()");
-        scope  = XML.getValue(node, "UserMessage/Scope/text()");
+        what = XML.getValue(node, "UserMessage/What/text()");
+        scope = XML.getValue(node, "UserMessage/Scope/text()");
         action = XML.getValue(node, "UserMessage/Action/text()");
-        more   = XML.getValue(node, "UserMessage/More/text()");
+        more = XML.getValue(node, "UserMessage/More/text()");
         progammerMessage = XML.getValue(node, "ProgrammerMessage/text()");
     }
 
-    
+
     /**
      * Format an XML version of an exception.
-     * 
-     * @param code Unique code identifying this type of exception.
-     * 
-     * @param what Description of error.
-     * 
-     * @param scope Scope of the impact of the error.
-     * 
-     * @param action Corrective action to be taken.
-     * 
-     * @param more Additional background or suggestions.
-     * 
+     *
+     * @param code             Unique code identifying this type of exception.
+     * @param what             Description of error.
+     * @param scope            Scope of the impact of the error.
+     * @param action           Corrective action to be taken.
+     * @param more             Additional background or suggestions.
      * @param progammerMessage Technical description of error to aid software developers.
-     * 
      * @return XML string representing the exception.
      */
     public static String toXML(Throwable throwable, long code, String what, String scope, String action, String more, String progammerMessage) {
         String codeString = (code == -1) ? "" : (" Code='" + code + "'");
         throwable = (throwable == null) ? (new Exception(progammerMessage)) : throwable;
         String text =
-            "<Exception" + codeString + " Name='" + throwable.getClass().getName() + "'>\n"               +
-            "  <Code>" + code + "</Code>\n"                                                               +
-            "  <UserMessage>\n"                                                                           +
-            "    <What>"   + XML.escapeSpecialChars(what)   + "</What>\n"                                 +
-            "    <Scope>"  + XML.escapeSpecialChars(scope)  + "</Scope>\n"                                +
-            "    <Action>" + XML.escapeSpecialChars(action) + "</Action>\n"                               +
-            "    <More>"   + XML.escapeSpecialChars(more)   + "</More>\n"                                 +
-            "  </UserMessage>\n"                                                                          +
-            "  <ProgrammerMessage>" + XML.escapeSpecialChars(progammerMessage) + "</ProgrammerMessage>\n" +
-            "</Exception>";
+                "<Exception" + codeString + " Name='" + throwable.getClass().getName() + "'>\n" +
+                        "  <Code>" + code + "</Code>\n" +
+                        "  <UserMessage>\n" +
+                        "    <What>" + XML.escapeSpecialChars(what) + "</What>\n" +
+                        "    <Scope>" + XML.escapeSpecialChars(scope) + "</Scope>\n" +
+                        "    <Action>" + XML.escapeSpecialChars(action) + "</Action>\n" +
+                        "    <More>" + XML.escapeSpecialChars(more) + "</More>\n" +
+                        "  </UserMessage>\n" +
+                        "  <ProgrammerMessage>" + XML.escapeSpecialChars(progammerMessage) + "</ProgrammerMessage>\n" +
+                        "</Exception>";
         return text;
     }
-
 
 
     /**
      * Format this exception as an XML string, and add on the current stack to
      * aid in tracking down errors.
-     * 
+     *
      * @return This exception as an XML string.
      */
     public String toXML() {
@@ -165,42 +175,36 @@ public class UMROException extends Exception {
     }
 
 
-
     /**
      * Construct a serialized response for an exception.
-     * 
-     * @param service Name of originating service.
-     * 
+     *
+     * @param service        Name of originating service.
      * @param serviceVersion UtilVersion of originating service.
-     * 
-     * @param method Server method that was invoked.
-     * 
-     * @param exception Exception that was thrown.
-     * 
+     * @param method         Server method that was invoked.
+     * @param exception      Exception that was thrown.
      * @return XML string encapsulating the exception.
      */
     public static String serializedResponse(String service, String serviceVersion, String method, Exception exception) {
 
         String content = null;
         if (exception instanceof UMROException) {
-            content = ((UMROException)exception).toXML();
-        }
-        else {
+            content = ((UMROException) exception).toXML();
+        } else {
             content = toXML(exception, UNDEFINED_CODE, "", "", "", "", exception.getMessage());
         }
 
         return
-        "<UMROEnvelope Time='" + timeStampFormat.format(new Date()) + "'>\n" +
-        "  <Response>\n"                                                     +
-        "    <" + service + " UtilVersion='" + serviceVersion + "'>\n"           +
-        "      <" + method + ">\n"                                           +
-              content                                                        +
-        "      </" + method + ">\n"                                          +
-        "    </" + service + ">\n"                                           +
-        "  </Response>\n"                                                    +
-        "</UMROEnvelope>\n";
+                "<UMROEnvelope Time='" + timeStampFormat.format(new Date()) + "'>\n" +
+                        "  <Response>\n" +
+                        "    <" + service + " UtilVersion='" + serviceVersion + "'>\n" +
+                        "      <" + method + ">\n" +
+                        content +
+                        "      </" + method + ">\n" +
+                        "    </" + service + ">\n" +
+                        "  </Response>\n" +
+                        "</UMROEnvelope>\n";
     }
-    
+
     @Override
     public String toString() {
         return this.getClass().getName() + ": " + progammerMessage;

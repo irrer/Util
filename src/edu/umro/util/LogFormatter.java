@@ -16,33 +16,31 @@ package edu.umro.util;
  * limitations under the License.
  */
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.io.*;
+import java.text.*;
+import java.util.*;
 import java.util.logging.Formatter;
-import java.util.logging.LogRecord;
+import java.util.logging.*;
 
 /**
  * This custom formatter formats parts of a log record to a single line
- * 
- * @author Jim Irrer  irrer@umich.edu 
  *
+ * @author Jim Irrer  irrer@umich.edu
  */
 class LogFormatter extends Formatter {
-    
+
     private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm:SS.sss");
 
-    
+
     public LogFormatter() {
         super();
     }
-    
+
     // This method is called for every log records
     public String format(LogRecord rec) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(byteArrayOutputStream);
-                
+
         printStream.format("%-7s %-24s %-80s  %-40s Seq:%d Thread:%d\n",
                 rec.getLevel(),
                 SIMPLE_DATE_FORMAT.format(new Date(rec.getMillis())),
@@ -50,7 +48,7 @@ class LogFormatter extends Formatter {
                 rec.getSourceClassName() + "." + rec.getSourceMethodName(),
                 rec.getSequenceNumber(),
                 rec.getThreadID());
-        
+
         return byteArrayOutputStream.toString();
     }
 

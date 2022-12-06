@@ -16,14 +16,13 @@ package edu.umro.util;
  * limitations under the License.
  */
 
-import java.util.Date;
+import java.util.*;
 
 /**
  * Utilities having to do with program execution and
  * operating system functions.
- * 
- * @author Jim Irrer  irrer@umich.edu 
  *
+ * @author Jim Irrer  irrer@umich.edu
  */
 public class Exec {
 
@@ -35,22 +34,20 @@ public class Exec {
      */
     public static void sleep(long ms) {
 
-        Date now = new Date(); 
+        Date now = new Date();
         long finish = now.getTime() + ms;
         long remaining = finish - (now.getTime());
 
         while (remaining > 0) {
             try {
                 Thread.sleep(remaining);
+            } catch (InterruptedException ex) {
+                // do nothing
             }
-            catch (InterruptedException ex) {
-                ;
-            }
-            now = new Date(); 
+            now = new Date();
             remaining = finish - (now.getTime());
         }
     }
-
 
 
     /**
@@ -59,14 +56,13 @@ public class Exec {
      * @param ms Time to sleep in milliseconds.
      */
     public static void sleep(int ms) {
-        sleep((long)ms);
+        sleep((long) ms);
     }
-
 
 
     /**
      * Return the current time in milliseconds.
-     * 
+     *
      * @return The current time in milliseconds.
      */
     public static long now() {
