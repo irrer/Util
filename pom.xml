@@ -23,37 +23,26 @@ limitations under the License.
     <groupId>edu.umro</groupId>
     <artifactId>util</artifactId>
     <packaging>jar</packaging>
-    <version>1.3.16</version>
+    <version>1.3.19</version>
     <name>${artifactId}</name>
     <description>General utilities</description>
-    <distributionManagement>
-        <repository>
-            <id>thirdParty</id>
-            <name>Internal Releases</name>
-            <url>http://141.214.124.203:8081/nexus/content/repositories/thirdparty</url>
-        </repository>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <name>Internal Snapshots</name>
-            <url>http://141.214.124.203:8081/nexus/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
+    <!--
+    -->
     <properties>
 
-    <!--  tell the compiler we can use 1.6 -->
-    <maven.compiler.source>1.6</maven.compiler.source>
-    <maven.compiler.target>1.6</maven.compiler.target>
+    <!--  tell the compiler we can use 1.7 -->
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
 
     </properties>
     <repositories />
 
     <dependencies>
-        <dependency> <groupId>junit</groupId>     <artifactId>junit</artifactId>        <version>4.13.1</version>   <scope>test</scope> </dependency>
-        <dependency> <groupId>pixelmed</groupId>  <artifactId>pixelmed</artifactId>     <version>20180401</version>                     </dependency>
-        <dependency> <groupId>org.slf4j</groupId> <artifactId>slf4j-api</artifactId>    <version>1.7.25</version>                       </dependency>
+        <dependency> <groupId>org.junit.jupiter</groupId> <artifactId>junit-jupiter-api</artifactId>  <version>5.9.1</version>      <scope>test</scope> </dependency>
+        <dependency> <groupId>org.slf4j</groupId>         <artifactId>slf4j-api</artifactId>          <version>2.0.5</version>                          </dependency>
     </dependencies>
     <!-- 
-        <dependency> <groupId>org.slf4j</groupId> <artifactId>slf4j-simple</artifactId> <version>1.7.25</version>                       </dependency>
+        <dependency> <groupId>pixelmed</groupId>  <artifactId>pixelmed</artifactId>     <version>20201205</version>                     </dependency>
      -->
     <build>
         <sourceDirectory>${project.basedir}/src</sourceDirectory>
@@ -78,16 +67,14 @@ limitations under the License.
         <plugins>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.6</version>
+                <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-antrun-plugin</artifactId> <version>3.1.0</version>
 
                 <executions>
                     <execution>
                         <id>generate-manifest-with-timestamp</id>
                         <phase>test</phase>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <delete file="target/MANIFEST.MF" />
                                 <copy file="MANIFEST.MF" todir="target" />
                                 <echo>Hello from timestamp</echo>
@@ -95,10 +82,12 @@ limitations under the License.
                                     <format property="TIMESTAMP" pattern="yyyy-MMM-dd hh:mm:ss aa" locale="en,US" />
                                 </tstamp>
                                 <replace file="target/MANIFEST.MF">
+                                    <!--suppress MavenModelInspection -->
                                     <replacefilter token="@@BUILD_DATE@@" value="${TIMESTAMP}"/>
+                                    <!--suppress MavenModelInspection -->
                                     <replacefilter token="@@DEVELOPER@@" value="${user.name}"/>
                                 </replace>
-                            </tasks>
+                            </target>
                         </configuration>
                         <goals>
                             <goal>run</goal>
@@ -108,9 +97,7 @@ limitations under the License.
             </plugin>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
+                <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-jar-plugin</artifactId> <version>3.3.0</version>
                 <configuration>
                     <archive>
                         <manifestFile>target/MANIFEST.MF</manifestFile>
@@ -119,9 +106,7 @@ limitations under the License.
             </plugin>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.1.2</version>
+                <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-source-plugin</artifactId> <version>3.2.1</version>
                 <configuration>
                     <archive></archive>
                 </configuration>
@@ -134,9 +119,7 @@ limitations under the License.
                 </executions>
             </plugin>
             <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-compiler-plugin</artifactId>
-              <version>2.3.2</version>
+              <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-compiler-plugin</artifactId> <version>3.10.1</version>
               <configuration>
                 <source>${maven.compiler.source}</source>
                 <target>${maven.compiler.target}</target>
